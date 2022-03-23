@@ -1,0 +1,72 @@
+.backgroundImage {
+    display: block;
+    /* background-image: url("../public/lily.jpg"); */
+
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.backgroundVideo {
+  opacity: .6;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+}
+
+.sideImg {
+  background-image: url("./components/food5.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.backgroundColour{
+  background-color: rgb(78, 169, 88);
+  color: #fff;
+}
+
+.foodItemContainer{
+  height: 110vh;
+}
+
+.cardContainer{
+  height: 100vh;
+}
+
+.menuContainer {
+  height: 90vh;
+  overflow:hidden;
+}
+
+.sideContainer{
+  height: 90%;
+  overflow: hidden;
+}
+.textColor{
+  color: #FFA500;
+}
+
+.sideContainer2{
+  /* background-image: url("./components/table_2.jpg"); */
+  background-image: url("./components/food5.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 90%;
+}
+
+.verticalCenter{
+  margin: 0;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.cardOpacity{
+  opacity: .7;
+}
