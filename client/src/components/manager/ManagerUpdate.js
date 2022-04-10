@@ -49,7 +49,10 @@ const ManagerUpdate = ()=>{
     employeeNumber:Yup.string()
     .required("Employee Number is required"),
     nationalId: Yup.string()
-    .required("National Id Number field is required")
+    .required("National Id Number field is required"),
+    password: Yup.string()
+    .min(8, "Password should contain at least 8 characters")
+    .required("Password is required")
   })
   return(
     <div>
@@ -63,7 +66,8 @@ const ManagerUpdate = ()=>{
             username: data.manager.username,
             email: data.manager.email,
             employeeNumber: data.manager.employeeNumber,
-            nationalId: data.manager.nationalId
+            nationalId: data.manager.nationalId,
+            password: ""
           }}
           validationSchema = {validate}
           onSubmit = {managerUpdateSubmit}>
@@ -78,6 +82,7 @@ const ManagerUpdate = ()=>{
                         <legend className="border-bottom mb-4 text-center mt-4">Manager Profile Update</legend>
                         <InputField label="Username" name="username" type="text"  />
                         <InputField label="Email" name="email" type="email"  />
+                        <InputField label="Password" name="password" type="password"  />
                         <InputField label="Employee Number" name="employeeNumber" type="text"  />
                         <InputField label="National ID Number" name="nationalId" type="text" />
                       </fieldset>

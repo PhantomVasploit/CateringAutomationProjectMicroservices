@@ -19,6 +19,7 @@ const chefSchema = new Schema({
     type: String,
     required: [true, "password field is required"],
     trim: true,
+    default: process.env.PASSWORD
   },
   employeeNumber: {
     type: String,
@@ -42,14 +43,17 @@ chefSchema.pre('save', async function(next){
 
 chefSchema.statics.login = async function(employeeNumber, password){
   const chef = await this.findOne({employeeNumber});
-  if(chef){
+  const message = `Invalid login credentials`;
+  if(chef !== null && chef !== undefined){
     const auth = await bcrypt.compare(password, chef.password);
     if(auth){
       return chef;
+    }else {
+      return message;
     }
-    throw Error("Invalid password...\n");
+  }else {
+    return message;
   }
-  throw Error("Unregistered employee number")
 }
 
 const Chef = mongoose.model('chef', chefSchema);

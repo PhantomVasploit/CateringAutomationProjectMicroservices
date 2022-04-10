@@ -5,9 +5,9 @@ const { seedDatabase, getFoodItems } = require("../controller/foodItem.controlle
 const { createEMenu, getMenu } = require("../controller/e_menu.controller");
 const { requireAuth } = require("../middleware/auth.middleware");
 
-router.post("/seed",  seedDatabase);
+router.post("/seed", requireAuth, seedDatabase);
 router.get("/foodItems", requireAuth, getFoodItems);
 router.post("/:foodItemId/:chefId", requireAuth, createEMenu);
-router.get("/menu", requireAuth, getMenu);
+router.get("/menu", getMenu);
 
 module.exports = router;

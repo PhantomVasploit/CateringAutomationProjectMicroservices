@@ -13,9 +13,6 @@ const CustomerRegister = ()=>{
     email: Yup.string()
     .email("Invalid Email")
     .required("Email field is required"),
-    password: Yup.string()
-    .min(8, "Password should at least be 8 characters long")
-    .required("Password field is required"),
     registrationNumber:Yup.string()
     .required("Employee Number is required"),
   })
@@ -24,7 +21,6 @@ const CustomerRegister = ()=>{
     initialValues={{
       username: "",
       email: "",
-      password: "",
       registrationNumber: ""
     }}
     validationSchema = {validate}
@@ -41,7 +37,6 @@ const CustomerRegister = ()=>{
                   <legend className="border-bottom mb-4 text-center mt-4">Sign Up</legend>
                   <InputField label="Username" name="username" type="text" />
                   <InputField label="Email" name="email" type="email" />
-                  <InputField label="Password" name="password" type="password" />
                   <InputField label="Phone Number" name="phoneNumber" type="text" />
                   <InputField label="Registration Number" name="registrationNumber" type="text" />
                 </fieldset>

@@ -1,11 +1,9 @@
 import {Formik, Form} from "formik";
 import {useContext} from "react";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
 import InputField from "../InputField";
 import {UserAuthContext} from "../../contexts/UserAuthContext";
 
-toast.configure();
 const ManagerLogin = ()=>{
   const {managerLoginSubmit, error} = useContext(UserAuthContext);
   const validate = Yup.object({
@@ -52,14 +50,6 @@ const ManagerLogin = ()=>{
             </Formik>
           :
             <div>
-              <div className="d-flex justify-content-center mt-4">
-                <div className="fw-bold fs-5 text-uppercase text-danger">
-                  {
-                    error
-                  }
-                </div>
-              </div>
-
               <Formik
               initialValues = {{
                 password: "",
@@ -77,6 +67,11 @@ const ManagerLogin = ()=>{
                           <fieldset className="form-group">
                             <h1 className="d-flex justify-content-center"><img src={require("../logo.png")} alt="" width="60" height="60" className="d-inline-block align-text-top me-3"  /> Egerton Bites </h1>
                             <legend className="border-bottom mb-4 text-center mt-4">Manager's Sign In</legend>
+                            <div className="lead text-uppercase text-danger mb-2">
+                              {
+                                error
+                              }
+                            </div>
                             <InputField label="Employee Number" name="employeeNumber" type="text" />
                             <InputField label="Password" name="password" type="password" />
                           </fieldset>

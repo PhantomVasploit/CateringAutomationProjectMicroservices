@@ -10,7 +10,7 @@ const CreateStock = ()=>{
 
   const { user } = useContext(UserAuthContext);
   const authenticatedUser = user || JSON.parse(localStorage.getItem("authenticatedStockManager"));
-  const {data, isPending, error} = useAuthAxios('http://127.0.0.1:5010/api/stock/foodItems');
+  const {data, isPending, error} = useAuthAxios('http://127.0.0.1:5010/api/stock');
   return (
     <div className="container">
       <div className="row">

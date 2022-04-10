@@ -33,8 +33,8 @@ const Navbar = ()=>{
           :
             (
               <ul className="navbar-nav ms-auto" >
-                <li className="nav-item">
-                  <Link className="nav-link active" to="/customer/menu"><i className="fa fa-shopping-cart fs-4"></i><span className="position-absolute translate-middle badge rounded-pill bg-danger">0</span></Link>
+                <li className="nav-item text-uppercase">
+                  <Link className="nav-link active" to="/manager/customer/update"> <i className="fa fa-user me-2"></i>Update Account</Link>
                 </li>
               </ul>
             )

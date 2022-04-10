@@ -24,6 +24,10 @@ const foodItemSchema = new Schema({
   studentCafeteriaPrice:{
     type: Number,
     required: [true, "Student cafeteria price field required"]
+  },
+  ingredients: {
+    type: Array,
+    required:  [true, "ingredients field is required"]
   }
 });
 

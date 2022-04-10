@@ -17,7 +17,7 @@ const LandingPageContent = ()=>{
             <p className="fw-bold">
               Check out our E-Menu for the most delicious, luscious food.
             </p>
-            <Link className="btn btn-outline-success" to="/emenu">E-Menu</Link>
+            <Link className="btn btn-success" to="/emenu">E-Menu</Link>
             </div>
           </div>
       </div>

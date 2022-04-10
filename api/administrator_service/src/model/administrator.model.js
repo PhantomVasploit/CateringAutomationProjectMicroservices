@@ -43,14 +43,17 @@ adminSchema.pre('save', async function(next){
 
 adminSchema.statics.login = async function(employeeNumber, password){
   const cashier = await this.findOne({employeeNumber});
+  const message = `Invalid login credentials`;
   if(cashier){
     const auth = await bcrypt.compare(password, cashier.password);
     if(auth){
       return cashier;
+    }else {
+      return message
     }
-    throw Error("Invalid password...\n");
+  }else {
+    return message;
   }
-  throw Error("Invalid employeeNumber...\n");
 }
 
 const Admin = mongoose.model('admin', adminSchema);

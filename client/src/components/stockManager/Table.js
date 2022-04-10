@@ -1,25 +1,43 @@
+import {useState} from "react";
 import TableRow from "./TableRow";
-const Table = ({data, user})=>{
 
+const Table = ({data, user})=>{
+  const [searchTerm, setSearchTerm] = useState('');
    return(
     <div className="container mt-3">
       <div className="row">
         <div className="col">
-          <table className="table table-striped table-hover">
+        <div className="row">
+          <div className="col">
+            <input
+            className="form-control shadow-none cardOpacity mb-4"
+            placeholder="Search by food item name..."
+            name="Search"
+            type="text"
+            onChange={(e)=>{
+              setSearchTerm(e.target.value)
+            }}
+            />
+          </div>
+        </div>
+
+          <table className="table  text-light sideContainer2">
             <thead>
               <tr>
-                <th scope="col">Code Number</th>
-                <th scope="col">Food Item</th>
-                <th scope="col"></th>
-                <th scope="col">Amount Prepared</th>
-                <th scope="col"></th>
+                <th scope="col text-uppercase">ItemName</th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {
-                data.items.map((foodItem)=>(
-                  <TableRow key={foodItem._id} foodItem={foodItem} user={user} />
+                data.items.filter((ingredient)=>{
+                  if(searchTerm === ""){
+                    return ingredient
+                  }else if (ingredient.itemName.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    return ingredient
+                  }
+                }).map((ingredient)=>(
+                  <TableRow key={ingredient._id}  ingredient={ingredient} />
                 ))
               }
             </tbody>

@@ -18,7 +18,8 @@ const managerSchema = new Schema({
   password: {
     type: String,
     required: [true, "password field is required"],
-    trim: true
+    trim: true,
+    default: process.env.PASSWORD
   },
   employeeNumber: {
     type: String,
@@ -42,7 +43,6 @@ managerSchema.pre('save', async function(next){
 
 managerSchema.statics.login = async function(employeeNumber, password){
   const manager = await this.findOne({employeeNumber});
-  console.log(`${JSON.stringify(manager)}`);
   const message = `Invalid login credentials`;
   if(manager !== null && manager !== undefined){
     const auth = await bcrypt.compare(password, manager.password);

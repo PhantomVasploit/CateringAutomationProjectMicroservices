@@ -19,7 +19,8 @@ const cashierSchema = new Schema({
   password:{
     type: String,
     required: [true, "password field is required"],
-    trim: true
+    trim: true,
+    default: process.env.PASSWORD
   },
   employeeNumber: {
     type: String,
@@ -43,14 +44,17 @@ cashierSchema.pre('save', async function(next){
 
 cashierSchema.statics.login = async function(employeeNumber, password){
   const cashier = await this.findOne({employeeNumber});
-  if(cashier){
+  const message = `Invalid login credentials`;
+  if(cashier !== null && cashier !== undefined){
     const auth = await bcrypt.compare(password, cashier.password);
     if(auth){
       return cashier;
+    }else {
+      return message;
     }
-    throw Error("Invalid password...\n");
+  }else {
+    return message;
   }
-  throw Error("Invalid employeeNumber...\n");
 }
 
 const Cashier = mongoose.model('cashier', cashierSchema);

@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Manager = require("../model/manager.model");
 const {createToken} = require("../utils/token");
+
+const hashPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
 
 exports.register = (req, res)=>{
   try {
@@ -67,10 +74,10 @@ exports.managerAccounts = (req, res)=>{
 
 exports.updateAccount = (req, res)=>{
   try {
-    const {username, email, employeeNumber, nationalId} = req.body.body.values;
+    const {username, email, employeeNumber, nationalId, password} = req.body.body.values;
     const toId = mongoose.Types.ObjectId;
     const managerId = toId(req.params.managerId);
-    Manager.findOneAndUpdate({_id: managerId}, {username, email, employeeNumber, nationalId})
+    Manager.findOneAndUpdate({_id: managerId}, {username, email, employeeNumber, nationalId, password: hashPassword(password)})
     .then(()=>{
       Manager.findOne({_id: managerId})
       .then((manager)=>{

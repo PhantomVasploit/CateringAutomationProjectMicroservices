@@ -48,7 +48,10 @@ const ChefUpdate = ()=>{
     employeeNumber:Yup.string()
     .required("Employee Number is required"),
     nationalId: Yup.string()
-    .required("National Id Number field is required")
+    .required("National Id Number field is required"),
+    password: Yup.string()
+    .min(8, "Password should contain at least 8 characters")
+    .required("Password is required")
   })
   return(
     <div>
@@ -62,7 +65,8 @@ const ChefUpdate = ()=>{
             username: data.chef.username,
             email: data.chef.email,
             employeeNumber: data.chef.employeeNumber,
-            nationalId: data.chef.nationalId
+            nationalId: data.chef.nationalId,
+            password: ""
           }}
           validationSchema = {validate}
           onSubmit = {chefUpdateSubmit}>
@@ -77,6 +81,7 @@ const ChefUpdate = ()=>{
                         <legend className="border-bottom mb-4 text-center mt-4">Chef Profile Update</legend>
                         <InputField label="Username" name="username" type="text"  />
                         <InputField label="Email" name="email" type="email"  />
+                        <InputField label="Password" name="password" type="password"  />
                         <InputField label="Employee Number" name="employeeNumber" type="text"  />
                         <InputField label="National ID Number" name="nationalId" type="text" />
                       </fieldset>

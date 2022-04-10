@@ -47,6 +47,9 @@ const CustomerUpdate = ()=>{
     .required("Email field is required"),
     registrationNumber:Yup.string()
     .required("Employee Number is required"),
+    password: Yup.string()
+    .min(8, "Password should contain at least 8 characters")
+    .required("Password is required")
   })
   return(
     <div>
@@ -59,7 +62,8 @@ const CustomerUpdate = ()=>{
         initialValues={{
           username: data.customer.username,
           email: data.customer.email,
-          registrationNumber: data.customer.registrationNumber
+          registrationNumber: data.customer.registrationNumber,
+          password: ""
         }}
         validationSchema = {validate}
         onSubmit = {customerUpdateSubmit}
@@ -75,6 +79,7 @@ const CustomerUpdate = ()=>{
                       <legend className="border-bottom mb-4 text-uppercase text-center mt-4">Customer Profile Update</legend>
                       <InputField label="Username" name="username" type="text" />
                       <InputField label="Email" name="email" type="email" />
+                      <InputField label="Password" name="password" type="password"  />
                       <InputField label="Registration Number" name="registrationNumber" type="text" />
                     </fieldset>
                     <div className="d-flex justify-content-center mt-4">

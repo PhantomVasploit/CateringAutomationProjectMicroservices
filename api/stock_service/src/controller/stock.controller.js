@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const amqp = require("amqplib");
-const Stock = require("../models/stock.model");
+const Ingredient = require("../models/ingredient.model");
 
 
 let channel;
@@ -22,54 +22,60 @@ connect();
 
 exports.createStock = async (req, res)=>{
   try {
-    const {amountPrepared} = req.body.body;
     const toId = mongoose.Types.ObjectId;
+    const ingredientId = toId(req.params.ingredientId);
     const stockManagerId = toId(req.params.stockManagerId);
-    const foodItemId = toId(req.params.foodItemId);
-    const stock = await new Stock({
-      amountPurchased: amountPrepared,
-      foodItem: foodItemId,
-      stockManager: stockManagerId
-    });
-    await stock.save(function(error, result){
-      if(error){
-        res.status(401).json({"Message": `Error creating the stock item: ${error.message}`});
-      }
-      if(result){
-        res.status(201).json({"Message": "Stock item created successfully", result})
-      }
+    const {quantityPurchased, price} = req.body.body.values;
+    Ingredient.findOne({_id: ingredientId})
+    .then((ingredient)=>{
+      ingredient.stock.push({quantityPurchased: quantityPurchased, price: price, stockManager: stockManagerId});
+      ingredient.save();
+      res.status(201).json({"Message": "Stock created successfully"});
+    })
+    .catch((e)=>{
+      res.status(400).json({"Message": `Error creating stock: ${e.message}`});
     })
   } catch (e) {
     console.log(`Error @ the create stock handler:${e.message}`);
   }
 }
 
-exports.getStock = (req, res)=>{
+exports.getTodayStock = (req, res)=>{
   try {
-    const today = new Date().toLocaleDateString();
-    Stock.find({date: today}).populate([{path: "foodItem", select:['itemName'] }, {path: 'stockManager', select: ['username']}])
-    .then((items)=>{
-      res.status(200).json({"Message": "Fetch successful", items});
+    let filtered;
+    let merged = [];
+    const today = new Date();
+    Ingredient.find({})
+    .then((ingredients)=>{
+      ingredients.map((ingredient)=>{
+        if(ingredient.stock.length >= 1){
+          filtered = ingredient.stock.filter(function(value){
+            return value.date.getDate() == today.getDate();
+          });
+        }
+        merged = [{...filtered, itemName:ingredient.itemName}];
+      })
+      res.status(200).json({"Message": "Fetch successful", merged});
     })
     .catch((e)=>{
-      res.status(401).json({"Message": `Fetch failed: ${e.message}`});
+      res.status(400).json({"Message": `Error fetching data: ${e.message}`});
     })
   } catch (e) {
-    console.log(`Error @ the fetch stock handler: ${e.message}`);
+    console.log(`Error @ the getTodayStock handler: ${e.message}`);
   }
 }
 
+
+
 exports.getSpecificStock = (req, res)=>{
   try {
-    const today = new Date().toLocaleDateString();
-    const toId = mongoose.Types.ObjectId;
-    const foodItemId = toId(req.params.foodItemId);
-    Stock.findOne({foodItem: foodItemId})
-    .then((stock)=>{
-      res.status(200).json({"Message": "Fetch Failed", stock})
+    const ingredient = req.params.ingredient;
+    Ingredient.findOne({itemName: ingredient})
+    .then((ingredient)=>{
+      res.status(200).json({"Message": "Fetch successful", ingredient});
     })
     .catch((e)=>{
-      res.status(401).json({"Message": `Fetch Failed: ${e.message}`});
+      res.status(400).json({"Message": `Error fetching data: ${e.message}`});
     })
   } catch (e) {
     console.log(`Error @ the get specific stock route; ${e.message}`);
@@ -79,14 +85,20 @@ exports.getSpecificStock = (req, res)=>{
 exports.updateStock = (req, res)=>{
   try {
     const toId = mongoose.Types.ObjectId;
-    const stockId = toId(req.params.stockId);
-    const amountAdded = req.body.body;
-    Stock.findOneAndUpdate({_id: stockId}, {$inc:{amountPurchased: parseInt(amountAdded)}})
+    const ingredientId = toId(req.params.ingredientId);
+    const {quantityPurchased, price} = req.body.body;
+    Ingredient.findOneAndUpdate({_id: ingredientId},
+      {
+        "$set": {
+          "stock.$.quantityPurchased": quantityPurchased,
+          "stock.$.price": price
+        }
+      })
     .then(()=>{
-      res.status(200).json({"Message": "Amount purchsed incremented successfully"})
+      res.status(200).json({"Message": `Update successful`})
     })
     .catch((e)=>{
-      res.status(401).json({"Message": `Error incrementing the stock item purchased field`});
+      res.status(400).json({"Message": `Error updating stock: ${e.message}`});
     })
   } catch (e) {
     console.log(`Error @ the stock update amount purchsed hanler: ${e.message}`);
@@ -96,13 +108,13 @@ exports.updateStock = (req, res)=>{
 exports.deleteStock = (req, res)=>{
   try {
     const toId = mongoose.Types.ObjectId;
-    const stockId = toId(req.params.stockId);
-    Stock.findOneAndRemove({_id: stockId})
+    const ingredientId = toId(req.params.ingredientId);
+    Ingredient.findOneAndRemove({_id: ingredientId})
     .then(()=>{
-      res.status(200).json({"Message": "Stock itme deleted"});
+      console.log(`Ingredient deleted successfully`);
     })
     .catch((e)=>{
-      res.status(401).json({"Message": `Unable to delete stock item: ${e.message}`});
+      res.status(400).json({"Message": `Error deleting ingredient: ${e.message}`});
     })
   } catch (e) {
     console.log(`Error @the delete stock hanler: ${e.message}`);

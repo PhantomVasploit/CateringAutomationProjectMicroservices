@@ -21,7 +21,7 @@ const Table = ({data, user})=>{
           </div>
         </div>
 
-          <table className="table  table-hover text-light sideContainer2">
+          <table className="table text-light sideContainer2">
             <thead>
               <tr>
                 <th scope="col text-light">Code Number</th>

@@ -1,7 +1,10 @@
 const amqp = require("amqplib");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
 const Chef = require("../model/chef.model");
-const {createToken} = require("../utils/token")
+const {createToken} = require("../utils/token");
+
 let connection;
 let channel;
 let queue;
@@ -22,6 +25,11 @@ async function connect(){
 
 connect();
 
+const hashPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
 
 module.exports.register = (req, res)=>{
   try {
@@ -88,11 +96,11 @@ module.exports.chefAccounts = (req, res)=>{
 
 module.exports.updateAccount = (req, res)=>{
   try {
-    const {username, email, employeeNumber, nationalId} = req.body.body.values;
+    const {username, email, employeeNumber, nationalId, password} = req.body.body.values;
     const toId = mongoose.Types.ObjectId;
     const chefId = toId(req.params.chefId);
     const data = {username, email, employeeNumber, nationalId, chefId};
-    Chef.findOneAndUpdate({_id: chefId}, { username, email, employeeNumber, nationalId })
+    Chef.findOneAndUpdate({_id: chefId}, { username, email, employeeNumber, nationalId, password: hashPassword(password) })
     .then(()=>{
       Chef.findOne({_id: chefId})
       .then((chef)=>{

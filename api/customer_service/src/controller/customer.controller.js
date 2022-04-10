@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const amqp = require("amqplib");
 
 const Customer = require("../model/customer.model");
@@ -23,6 +24,12 @@ async function connect(){
 }
 
 connect();
+
+const hashPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
 
 module.exports.register = (req, res)=>{
   try {
@@ -101,7 +108,8 @@ module.exports.customerUpdate = (req, res)=>{
       Customer.findOneAndUpdate({_id: customerId}, {
           username: data.username,
           email: data.email,
-          registrationNumber: data.registrationNumber
+          registrationNumber: data.registrationNumber,
+          password: hashPassword(data.password)
       })
       .then(()=>{
         Customer.findOne({_id: customerId})

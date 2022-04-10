@@ -14,9 +14,6 @@ const ManagerRegister = ()=>{
     email: Yup.string()
     .email("Invalid Email")
     .required("Email field is required"),
-    password: Yup.string()
-    .min(8, "Password should at least be 8 characters long")
-    .required("Password field is required"),
     employeeNumber:Yup.string()
     .required("Employee Number is required"),
     nationalId: Yup.string()
@@ -27,7 +24,6 @@ const ManagerRegister = ()=>{
     initialValues={{
       username: "",
       email: "",
-      password: "",
       employeeNumber: "",
       nationalId: ""
     }}
@@ -45,7 +41,6 @@ const ManagerRegister = ()=>{
                   <legend className="border-bottom mb-4 text-center mt-4">Manager's Sign Up</legend>
                   <InputField label="Username" name="username" type="text" />
                   <InputField label="Email" name="email" type="email" />
-                  <InputField label="Password" name="password" type="password" />
                   <InputField label="Employee Number" name="employeeNumber" type="text" />
                   <InputField label="National ID Number" name="nationalId" type="text" />
                 </fieldset>

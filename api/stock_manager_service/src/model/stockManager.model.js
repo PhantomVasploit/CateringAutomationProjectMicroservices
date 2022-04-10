@@ -19,7 +19,8 @@ const stockManagerSchema = new Schema({
   password:{
     type: String,
     required: [true, "password field is required"],
-    trim: true
+    trim: true,
+    default: process.env.PASSWORD
   },
   employeeNumber: {
     type: String,
@@ -43,14 +44,17 @@ stockManagerSchema.pre('save', async function(next){
 
 stockManagerSchema.statics.login = async function(employeeNumber, password){
   const stockManager = await this.findOne({employeeNumber});
-  if(stockManager){
+  const message = `Invalid login credentials`;
+  if(stockManager !== null && manager !== undefined){
     const auth = await bcrypt.compare(password, stockManager.password);
     if(auth){
       return stockManager;
+    }else{
+      return message;
     }
-    throw Error("Invalid password...\n");
+  }else {
+      return message
   }
-  throw Error("Invalid employeeNumber...\n");
 }
 
 const StockManager = mongoose.model('stockManager', stockManagerSchema);

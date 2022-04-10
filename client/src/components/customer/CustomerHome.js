@@ -82,7 +82,7 @@ const CustomerHome = () =>{
                         </div>
 
                         <div className="d-flex justify-content-center mt-4">
-                          <Link className="btn btn-outline-success" to="/customer/menu">Menu</Link>
+                          <Link className="btn btn-success" to="/customer/menu">Menu</Link>
                         </div>
 
                       </div>

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const amqp = require("amqplib");
 const StockManager = require("../model/stockManager.model");
+const bcrypt = require("bcrypt");
 const {createToken} = require("../utils/token");
 
 let connection;
@@ -22,6 +23,13 @@ async function connect(){
 }
 
 connect();
+
+const hashPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
+
 exports.register = (req, res)=>{
   try {
     const data = req.body.body.values;
@@ -81,7 +89,7 @@ module.exports.updateAccount = (req, res)=>{
     StockManager.findOneAndUpdate({_id: stockManagerId}, {
       username: data.username,
       email: data.email,
-      password: data.password,
+      password: hashPassword(data.password),
       employeeNumber: data.employeeNumber,
       nationalId: data.nationalId
     })

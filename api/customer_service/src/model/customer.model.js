@@ -19,7 +19,8 @@ const customerSchema = new Schema({
   password:{
     type: String,
     required: [true, "password field is required"],
-    trim: true
+    trim: true,
+    default: process.env.PASSWORD
   },
   registrationNumber: {
     type: String,
@@ -46,14 +47,17 @@ customerSchema.pre("save", async function(next){
 // login login
 customerSchema.statics.login = async function(registrationNumber, password){
   const customer = await this.findOne({registrationNumber});
+  const message = `Invalid login credentials`;
   if(customer){
     const auth = bcrypt.compare(password, customer.password);
     if(auth){
       return customer;
+    }else{
+      return message;
     }
-    throw Error(`Incorrect password...\n`);
+  }else {
+    return message;
   }
-  throw Error(`Unregistered registrationNumber...\n`);
 }
 
 const Customer = mongoose.model('customer', customerSchema);

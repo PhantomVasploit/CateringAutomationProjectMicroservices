@@ -34,9 +34,6 @@ const Navbar = ()=>{
             (
               <ul className="navbar-nav ms-auto" >
                 <li className="nav-item text-uppercase">
-                  <p className="lead ms-2"> <i className="fa fa-user"></i> {authenticatedUser.username}</p>
-                </li>
-                <li className="nav-item text-uppercase">
                   <Link className="nav-link active" to="/manager/manager/update">Update Account</Link>
                 </li>
               </ul>

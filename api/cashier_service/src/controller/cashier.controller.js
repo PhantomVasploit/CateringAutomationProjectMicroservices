@@ -1,7 +1,8 @@
 const amqp = require("amqplib");
 const mongoose = require("mongoose");
-const Cashier = require("../model/cashier.model");
+const bcrypt = require("bcrypt");
 
+const Cashier = require("../model/cashier.model");
 const { createToken } = require("../utils/token")
 
 let connection;
@@ -22,8 +23,13 @@ async function connect(){
   }
 }
 
-connect()
+connect();
 
+const hashPassword = async (password)=>{
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
 
 exports.register = (req, res)=>{
   try {
@@ -84,7 +90,8 @@ module.exports.updateAccount = (req, res)=>{
       username: data.username,
       email: data.email,
       employeeNumber: data.employeeNumber,
-      nationalId: data.nationalId
+      nationalId: data.nationalId,
+      password: hashPassword(data.password)
     })
     .then(()=>{
       Cashier.findOne({_id:cashierId})

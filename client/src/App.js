@@ -16,6 +16,7 @@ import StockManagerLogin from "./components/stockManager/StockManagerLogin";
 import StockManagerRegister from "./components/stockManager/StockManagerRegister";
 import StockManagerHome from "./components/stockManager/StockManagerHome";
 import CreateStock from "./components/stockManager/CreateStock";
+import StockOverLay from "./components/stockManager/OverLay";
 
 import ManagerRegister from "./components/manager/ManagerRegister"
 import ManagerLogin from "./components/manager/ManagerLogin";
@@ -81,6 +82,7 @@ function App() {
           <Route path="/stock_manager/register" element={<StockManagerRegister />} />
           <Route path="/stock_manager/stock" element={<CreateStock />} />
           <Route path="/stock_manager/home" element={<StockManagerHome />} />
+          <Route path="/stock_manager/overlay" element={<StockOverLay/>} />
 
           <Route path="/manager/register" element={ <ManagerRegister /> } />
           <Route path="/manager/login" element={ <ManagerLogin /> } />

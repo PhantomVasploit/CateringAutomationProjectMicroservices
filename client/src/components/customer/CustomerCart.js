@@ -6,7 +6,9 @@ import Navbar from "./Navbar";
 const Cart = ()=>{
   const location = useLocation();
   const {orders} = location.state;
-  const [quantity,setQuantity] = useState(1);
+  let [quantity,setQuantity] = useState(1);
+  let [submitMode, setSubmitMode] = useState(null);
+  let [id, setId] = useState(null);
   const authenticatedUser = JSON.parse(localStorage.getItem('authenticatedCustomer'));
   const [items, setItems] = useState([]);
 
@@ -28,10 +30,6 @@ useEffect(()=>{
 },[])
 
 
-
-
-
-
 const uploadOrder = ()=>{
   let singleData = {};
  const data =  items.map((item)=>{
@@ -44,7 +42,6 @@ const uploadOrder = ()=>{
     return singleData
   });
 
-  console.log(`Data is: ${JSON.stringify(data)}`);
 
   const setRequestOption = (item) => {
 
@@ -70,72 +67,86 @@ const uploadOrder = ()=>{
 
   return(
     <div className="row">
-      <div className="container">
+      <div className="container ">
         <div className="container">
           <Navbar />
+          <div className="sideContainer2 text-light">
 
-          <h1 className="lead text-uppercase mt-5 float-md-center">
-            <hr/>
-              <img src="https://img.icons8.com/nolan/64/food-cart.png" alt="cart icon"/> Cart
+            <h1 className="lead text-uppercase mt-5 float-md-center">
               <hr/>
-          </h1>
+                <img className="ms-3" alt="" src="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-cart-web-flaticons-flat-flat-icons.png"/> Cart
+              <hr/>
+            </h1>
 
-          <div className="row">
-            <div className="col">
-              <Link to="/customer/menu" className="btn btn-outline-success">Back To Menu</Link>
-            </div>
-            <div className="col">
-              <h1 className="badge bg-success text-uppercase">Pay via Mpesa</h1>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-lg-12">
-              <hr />
-              <h3 className="lead text-uppercase">Items Added To Your Food Cart({orders.length})</h3>
-              {
-                !orders
-                ?
-                <p className="badge bg-primary text-wrap text-center"></p>
-                :
-                <table className="table table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">Food Item</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Quantity</th>
-                      <th scope="col">Total Cost</th>
-                    </tr>
-                  </thead>
-                    <tbody>
-                      {
-                        items.map((order)=>(
-                          <tr key={order.foodItem._id}>
-                            <th scope="row">{order.foodItem.itemName}</th>
-                            <td>{order.foodItem.studentCafeteriaPrice}</td>
-                            <td>
-                              <input name="quantity" type="text" value={quantity} onChange={(e)=>{
-                                setQuantity(e.target.value)
-                                console.log(`${e.target.value}`);
-                              }}/>
-                            </td>
-                            <td>
-                              <p className="ms-2">{quantity * parseInt(order.foodItem.studentCafeteriaPrice)}</p>
-                            </td>
-                          </tr>
-                        ))
-                      }
-                    </tbody>
-                </table>
-              }
-              <div className="d-flex justify-content-center mt-4">
-                <Link
-                to="/customer/reciept"
-                className="btn btn-outline-success"
-                onClick = {uploadOrder}
-                > Check Out </Link>
+            <div className="row">
+              <div className="col">
+                <Link to="/customer/menu" className="btn btn-outline-success ms-3">Back To Menu</Link>
+              </div>
+              <div className="col">
+                <h1 className="badge bg-success text-uppercase">Pay via Mpesa</h1>
               </div>
             </div>
+
+            <div className="row">
+              <div className="col-lg-12">
+                <hr />
+                <h3 className="lead text-uppercase ms-3">Items Added To Your Food Cart({orders.length})</h3>
+                {
+                  !orders
+                  ?
+                  <p className="badge bg-primary text-wrap text-center"></p>
+                  :
+                  <table className="table table-striped table-hover text-light">
+                    <thead>
+                      <tr>
+                        <th scope="col">Food Item</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Cost</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                        {
+                          items.map((order)=>(
+                            <tr
+                            key={order.foodItem._id}
+                            onMouseEnter = {()=>{
+                              setSubmitMode(submitMode=order._id)
+                              setId(order.foodItem._id)
+                            }}
+                            onMouseLeave = {()=>{
+                              setSubmitMode(submitMode=null)
+                              setId(null)
+                            }}
+                            >
+                              <th className="text-light" scope="row">{order.foodItem.itemName}</th>
+                              <td className="text-light">{order.foodItem.studentCafeteriaPrice}</td>
+                              <td className="text-light">
+                                <input
+                                type="text"
+                                value={id === order.foodItem._id ? quantity : 1}
+                                onChange={(e)=>{ id===order.foodItem._id ? setQuantity(e.target.value) : setQuantity(1)}} />
+                              </td>
+                              <td className="text-light">
+                                <p className="ms-2">{ id === order.foodItem._id ? quantity * parseInt(order.foodItem.studentCafeteriaPrice): order.foodItem.studentCafeteriaPrice}</p>
+                              </td>
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                  </table>
+                }
+                <div className="d-flex justify-content-center mt-4 mb-4">
+                  <Link
+                  to="/customer/reciept"
+                  state={{orders: orders}}
+                  className="btn btn-info"
+                  onClick = {uploadOrder}
+                  > Check Out </Link>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
